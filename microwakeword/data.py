@@ -573,10 +573,14 @@ class FeatureHandler(object):
                     mode, features_length, truncation_strategy
                 )
 
+                count = 0
                 for spectrogram in generator:
                     data.append(spectrogram)
                     labels.append(provider.label)
                     weights.append(provider.penalty_weight)
+                    count += 1
+                    if mode in ["validation", "validation_ambient", "testing", "testing_ambient"] and count >= 5000:
+                        break
 
         if truncation_strategy != "none":
             # Spectrograms are all the same length, convert to numpy array
